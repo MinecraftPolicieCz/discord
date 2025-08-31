@@ -15,6 +15,8 @@
             height: 100vh;
             margin: 0;
             overflow: hidden;
+            flex-direction: column;
+            text-align: center;
         }
 
         /* Discord logo v levém horním rohu */
@@ -124,21 +126,52 @@
             50% { background-color: #00ff00; }
         }
 
-        #video-container {
+        #final-container {
             display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 9999;
-            background-color: black;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
         }
 
-        #video-container iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
+        #prank-audio {
+            display: none; /* Audio element je skrytý, ale přehrává se */
+        }
+
+        #final-message {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+            background-color: #2f3136;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        #final-message h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        #final-message p {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+        .discord-button {
+            background-color: #5865F2;
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .discord-button:hover {
+            background-color: #4752C4;
         }
     </style>
 </head>
@@ -167,8 +200,13 @@
     <div id="terminal"></div>
 </div>
 
-<div id="video-container">
-    <iframe id="prank-video" src="about:blank" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>
+<div id="final-container">
+    <audio id="prank-audio" src="https://raw.githubusercontent.com/MinecraftPolicieCz/hm/bdd99cc67d4da084107e6cf43bb0dcacaf6f0b14/Jebaited-%C4%8Cesk%C3%A1%20verze%20(original%20upload)%20%5BCJ1W-5P9xg0%5D.mp3" preload="auto"></audio>
+    <div id="final-message">
+        <h1>Byl jsi napálen. :D</h1>
+        <p>Tady máš Náš skvělý discord server:</p>
+        <a href="https://discord.com/invite/gSsfznn6Mh" class="discord-button" target="_blank">Připojit se na Discord</a>
+    </div>
 </div>
 
 <script>
@@ -177,8 +215,8 @@
         const startButton = document.getElementById('start-button');
         const terminalContainer = document.getElementById('terminal-container');
         const terminal = document.getElementById('terminal');
-        const videoContainer = document.getElementById('video-container');
-        const prankVideo = document.getElementById('prank-video');
+        const finalContainer = document.getElementById('final-container');
+        const prankAudio = document.getElementById('prank-audio');
 
         const lines = [
             "Spouštím systém [OK]",
@@ -247,17 +285,18 @@
             document.querySelector('.discord-logo-top').style.display = 'none';
             terminalContainer.style.display = 'block';
 
-            // Spustí psaní animace
             lineIndex = 0;
             charIndex = 0;
             typeLine(lines);
 
-            // Nastaví časovač na 35 sekund
             setTimeout(() => {
                 terminalContainer.style.display = 'none';
-                videoContainer.style.display = 'block';
-                // Načtení videa až po 35 sekundách
-                prankVideo.src = "https://drive.google.com/file/d/1RV--NWsB0sQ_x7QfqfbQ1K_AIVAsaeld/preview?autoplay=1";
+                finalContainer.style.display = 'flex';
+
+                // Spuštění zvuku
+                prankAudio.play().catch(error => {
+                    console.log("Automatické přehrávání zvuku bylo zablokováno. Zkuste kliknout na stránku.");
+                });
             }, totalDuration);
         });
     });
